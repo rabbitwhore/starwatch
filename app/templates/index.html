@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
+    <title>StarWatch</title>
+    <script>
+        function scrollToDomain(id) {
+            var domainNameElement = document.getElementById(id);
+            domainNameElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        function scrollToNextDomain(id) {
+            var currentDomain = document.getElementById(id);
+            var nextDomain = currentDomain.closest("li").nextElementSibling;
+            console.log('Current domain: ', currentDomain);
+            console.log('Next domain: ', nextDomain);
+            if (nextDomain !== null) {
+                nextDomain.querySelector(".posts").scrollIntoView({ behavior: 'smooth' });
+                currentDomain.classList.remove("active-domain");
+                nextDomain.querySelector(".posts").classList.add("active-domain");
+            }
+        }
+        function menu(value) {
+            var wrapper_menu = document.getElementById("wrapper-menu");
+            var icon_container_menu = document.getElementById("add-domain-container-menu");
+            var add_domain = document.getElementById("add-domain-container");
+            console.log("add-domain", add_domain);
+            if (value) {
+                add_domain.style.display = "block";
+            } else {
+                add_domain.style.display = "none";
+            }
+        }   
+    </script>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="wrapper-menu">
+            <img src="{{ url_for('static', filename='menu.svg') }}" onclick="menu(true)" />
+        </div>
+        <header>
+            <div id="icon-container">
+
+                <img src="{{ url_for('static', filename='starship.png')}}" />
+                <div id="name">StarWatch</div>
+                <div id="slogan">Domain Insight. Stellar Results.</div>
+                <div class="arrow-down" onclick="scrollToDomain('section')">
+                    <div>
+                        &lt;
+                    </div>
+                </div>
+                <div id="add-domain-container">
+                    <div id="add-domain-container-menu">
+                        <img src="{{ url_for('static', filename='menu_black.svg') }}" onclick="menu()" />
+                    </div>
+                    <form id="form-domain-name" method="POST" action="{{ url_for('main.index') }}">
+                        <h1>Add domain</h1>
+                        <input placeholder="Domain" type="text" name="name" id="add-domain-name"
+                            class="add-domain-name{% if already_exists %} existing_name{% endif %}" required>
+                        <input type="submit" value="Create">
+                    </form>
+                </div>
+        </header>
+        <section id="section">
+            <ul>
+                {% for domain in domains[::-1] %}
+                <li>
+                    <div class="posts{% if loop.first %} active-domain{% endif %}" id="{{domain.name}}">
+                        <div class="posts-content">
+                            {% if domain.registrar %}
+                            <!-- Domain details for existing domains -->
+                            <p><label class="subjects">Name:</label> <a href="https://{{domain.name}}">{{ domain.name
+                                    }}</a>
+                            </p>
+                            <p><label class="subjects">Available:</label> <label class="registrar-available">{{
+                                    domain.available
+                                    }}</label></p>
+                            <p><label class="subjects">Registrar:</label> {{ domain.registrar }}</p>
+                            <p><label class="subjects">Creation date:</label> {{ domain.creation_date }}</p>
+                            <p><label class="subjects">Updated date:</label> {{ domain.updated_date }}</p>
+                            <p><label class="subjects">Transfer date:</label> {{ domain.transfer_date }}</p>
+                            <p><label class="subjects">Expiration date:</label> {{domain.expiration_date}}</p>
+                            <p><label class="subjects">Name servers:</label> {{domain.name_servers}}</p>
+                            <p><label class="subjects">Last api update:</label> {{domain.last_updated}}</p>
+                            <div class="forms">
+                                <form class="update" method="POST"
+                                    action="{{ url_for('main.update_domain', domain_id=domain.id) }}">
+                                    <input type="submit" value="Update">
+                                </form>
+                                <form class="remove" method="POST"
+                                    action="{{ url_for('main.remove_domain', domain_id=domain.id) }}">
+                                    <input type="submit" value="Remove">
+                                </form>
+                                {% if loop.last %}
+                                <div class="arrow-down arrow-up" onclick="scrollToDomain('wrapper')">
+                                    <div>
+                                        &lt;
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="arrow-down" onclick="scrollToNextDomain(
+                                    '{{domain.name}}'
+                                )">
+                                    <div>
+                                        &lt;
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <p><label class="subjects">Name:</label> <a href="https://{{domain.name}}">{{
+                                    domain.name
+                                    }}</a>
+                            </p>
+                            <p><label class="subjects">Available:</label> <label class="available">{{
+                                    domain.available
+                                    }}</label></p>
+                            <p><label class="subjects">Last api update:</label> {{domain.last_updated}}</p>
+                            <div class="forms">
+                                <form class="update" method="POST"
+                                    action="{{ url_for('main.update_domain', domain_id=domain.id) }}">
+                                    <input type="submit" value="Update">
+                                </form>
+                                <form class="remove" method="POST"
+                                    action="{{ url_for('main.remove_domain', domain_id=domain.id) }}">
+                                    <input type="submit" value="Remove">
+                                </form>
+                                {% if loop.last %}
+                                <div class="arrow-down arrow-up" onclick="scrollToDomain('wrapper')">
+                                    <div>
+                                        &lt;
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="arrow-down" onclick="scrollToNextDomain('{{domain.name}}')">
+                                    <div>
+                                        &lt;
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+</body>
+
+</html>
