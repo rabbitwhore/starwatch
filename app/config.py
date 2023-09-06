@@ -1,6 +1,6 @@
 # Development configuration
 DEBUG = True
-SECRET_KEY = 'AcezuxSystemsDev'
+SECRET_KEY = 'secret_key'
 SQLALCHEMY_DATABASE_URI = 'sqlite:///domains.db'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -11,6 +11,6 @@ MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
-MAIL_USERNAME = 'danzpunkten@gmail.com'
-MAIL_PASSWORD = 'vwpeporymqdvrkgu'
-MAIL_DEFAULT_SENDER = 'danzpunkten@gmail.com'
+MAIL_USERNAME = ''
+MAIL_PASSWORD = ''
+MAIL_DEFAULT_SENDER = ''
