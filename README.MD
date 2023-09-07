@@ -5,6 +5,6 @@ making it effortless to manage your current domains and plan for future acquisit
 ## Todo
   * Set up email notifications to be sent 7 days before the domain expires.
   * Set up email notifications to be sent 1 day before the domain expires.
-  * Configure monthly email updates for all domain information.
+  * Configure monthly email updates for all domains
 
 
